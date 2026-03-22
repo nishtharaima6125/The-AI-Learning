@@ -281,7 +281,7 @@
 import { Copy, Check, Sparkles, Image } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 
@@ -298,8 +298,11 @@ const PromptsSection = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [promptCategories, setPromptCategories] = useState<{ title: string; gradient: string; prompts: PromptItem[] }[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [featuredPrompts, setFeaturedPrompts] = useState<PromptItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     let mounted = true;
@@ -344,6 +347,15 @@ const PromptsSection = () => {
             }),
           }))
         );
+
+        // Extract top 3 most recent prompts for featured section
+        const allPrompts = Object.values(byCategory).flat();
+        const sortedPrompts = allPrompts.sort((a, b) => {
+          const aTime = a.createdAt?.toDate?.()?.getTime?.() ?? 0;
+          const bTime = b.createdAt?.toDate?.()?.getTime?.() ?? 0;
+          return bTime - aTime;
+        });
+        setFeaturedPrompts(sortedPrompts.slice(0, 3));
       } catch (e) {
         console.error('PromptsSection fetch error:', e);
       }
@@ -396,60 +408,47 @@ const PromptsSection = () => {
             Free Resources
           </div>
           <h2 className="text-5xl sm:text-6xl font-black mb-6">
-            <span className="text-white">Prompt </span>
+            <span className="text-white">{isHomePage ? 'Featured ' : 'Prompt '}</span>
             <span className="bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
-              Library
+              {isHomePage ? 'Prompts' : 'Library'}
             </span>
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
             Ready-to-use prompts for AI tools, productivity, and development
           </p>
+          {isHomePage && (
+            <p className="text-lg text-slate-500 max-w-xl mx-auto mt-4">
+              Discover our top-rated and most recent AI prompts for maximum productivity
+            </p>
+          )}
         </motion.div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          <button
-            onClick={() => setSelectedCategory("All")}
-            className={`px-6 py-2 rounded-full font-semibold ${
-              selectedCategory === "All" ? "bg-cyan-500 text-white" : "bg-slate-800 text-slate-300"
-            }`}
-          >
-            All
-          </button>
-          {promptCategories.map((cat) => (
-            <button
-              key={cat.title}
-              onClick={() => setSelectedCategory(cat.title)}
-              className={`px-6 py-2 rounded-full font-semibold ${
-                selectedCategory === cat.title ? "bg-cyan-500 text-white" : "bg-slate-800 text-slate-300"
-              }`}
-            >
-              {cat.title}
-            </button>
-          ))}
-        </div>
-
-        {/* Prompt Categories */}
-        <div className="space-y-12">
-          {filteredCategories.map((category, categoryIndex) => (
+        {/* Conditional Content Rendering */}
+        {isHomePage ? (
+          // Featured View for Homepage
+          <>
+            {/* Featured Prompts Grid */}
             <motion.div
-              key={category.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+              transition={{ duration: 0.6 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
             >
-              <h3 className={`text-3xl font-bold bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent mb-6`}>
-                {category.title}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {category.prompts.map((prompt: PromptItem, promptIndex: number) => (
+              {featuredPrompts.map((prompt, index) => {
+                // Find the category gradient for this prompt
+                const category = promptCategories.find(cat => 
+                  cat.prompts.some(p => p.id === prompt.id)
+                );
+                const gradient = category?.gradient || 'from-gray-500 to-gray-600';
+                
+                return (
                   <motion.div
                     key={prompt.id}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: promptIndex * 0.1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
                     onClick={() => openPrompt(prompt)}
                     role="button"
                     tabIndex={0}
@@ -468,13 +467,20 @@ const PromptsSection = () => {
                           loading="lazy"
                         />
                       ) : (
-                        <div className={`w-full h-full bg-gradient-to-br ${category.gradient} opacity-30`} />
+                        <div className={`w-full h-full bg-gradient-to-br ${gradient} opacity-30`} />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
                       <div className="absolute top-4 left-4 inline-flex items-center gap-2">
+                        {/* Featured Badge */}
+                        <span className="inline-flex items-center gap-1 bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 px-3 py-1 rounded-full text-xs font-semibold">
+                          <svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                          </svg>
+                          Featured
+                        </span>
                         <span className={`text-xs font-semibold bg-slate-950/70 border border-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-slate-200`}>
-                          {prompt.category || category.title}
+                          {prompt.category || 'General'}
                         </span>
                       </div>
 
@@ -519,11 +525,152 @@ const PromptsSection = () => {
                       </div>
                     </div>
                   </motion.div>
-                ))}
-              </div>
+                );
+              })}
             </motion.div>
-          ))}
-        </div>
+
+            {/* Call to Action Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-center"
+            >
+              <button
+                onClick={() => navigate('/prompts')}
+                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-xl font-bold text-lg shadow-2xl shadow-cyan-500/50 hover:shadow-cyan-500/80 transition-all duration-300 hover:scale-105"
+              >
+                <span>View All Prompts</span>
+                <svg className="group-hover:translate-x-1 transition-transform" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </button>
+            </motion.div>
+          </>
+        ) : (
+          // Full View for Prompts Page
+          <>
+            {/* Category Tabs */}
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              <button
+                onClick={() => setSelectedCategory("All")}
+                className={`px-6 py-2 rounded-full font-semibold ${
+                  selectedCategory === "All" ? "bg-cyan-500 text-white" : "bg-slate-800 text-slate-300"
+                }`}
+              >
+                All
+              </button>
+              {promptCategories.map((cat) => (
+                <button
+                  key={cat.title}
+                  onClick={() => setSelectedCategory(cat.title)}
+                  className={`px-6 py-2 rounded-full font-semibold ${
+                    selectedCategory === cat.title ? "bg-cyan-500 text-white" : "bg-slate-800 text-slate-300"
+                  }`}
+                >
+                  {cat.title}
+                </button>
+              ))}
+            </div>
+
+            {/* Prompt Categories */}
+            <div className="space-y-12">
+              {filteredCategories.map((category, categoryIndex) => (
+                <motion.div
+                  key={category.title}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+                >
+                  <h3 className={`text-3xl font-bold bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent mb-6`}>
+                    {category.title}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {category.prompts.map((prompt: PromptItem, promptIndex: number) => (
+                      <motion.div
+                        key={prompt.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: promptIndex * 0.1 }}
+                        onClick={() => openPrompt(prompt)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') openPrompt(prompt);
+                        }}
+                        className="group cursor-pointer bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+                      >
+                        {/* Thumbnail */}
+                        <div className="relative h-52 overflow-hidden">
+                          {prompt.image ? (
+                            <img
+                              src={prompt.image}
+                              alt={prompt.title || 'Prompt'}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className={`w-full h-full bg-gradient-to-br ${category.gradient} opacity-30`} />
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+
+                          <div className="absolute top-4 left-4 inline-flex items-center gap-2">
+                            <span className={`text-xs font-semibold bg-slate-950/70 border border-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-slate-200`}>
+                              {prompt.category || category.title}
+                            </span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copyToClipboard(prompt.prompt, prompt.id);
+                            }}
+                            className="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-950/60 border border-white/10 backdrop-blur-sm text-slate-200 hover:text-white hover:bg-slate-950/80 transition-colors"
+                            aria-label={copiedId === prompt.id ? 'Copied' : 'Copy prompt'}
+                            title={copiedId === prompt.id ? 'Copied' : 'Copy prompt'}
+                          >
+                            {copiedId === prompt.id ? <Check size={18} /> : <Copy size={18} />}
+                          </button>
+
+                          {!prompt.image && (
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <Image className="text-slate-300/60" size={40} />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6">
+                          <div className="flex items-center justify-between gap-3 mb-3">
+                            <p className="text-xs text-slate-400">
+                              {formatPromptMeta(prompt)}
+                            </p>
+                          </div>
+                          <h4 className="text-xl font-black text-white mb-2 leading-snug line-clamp-2">
+                            {prompt.title || 'Untitled Prompt'}
+                          </h4>
+                          <p className="text-slate-400 line-clamp-3 text-sm leading-relaxed">
+                            {prompt.prompt}
+                          </p>
+                          <div className="mt-5">
+                            <span className="inline-flex items-center text-sm font-semibold text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                              Read prompt
+                              <span className="ml-2 group-hover:translate-x-0.5 transition-transform">→</span>
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

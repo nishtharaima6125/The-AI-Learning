@@ -41,16 +41,8 @@ const HomePage = () => {
       <ProjectsSection />
       <BlogsSection />
       <PromptsSection />
-
-      {/* About Section with bottom margin */}
-      <section className="py-24">
-        <AboutSection />
-      </section>
-
-      {/* Contact Section with top margin to avoid overlap */}
-      <section className="py-24 mt-20">
-        <ContactSection />
-      </section>
+      <AboutSection />
+      <ContactSection />
     </main>
   );
 };

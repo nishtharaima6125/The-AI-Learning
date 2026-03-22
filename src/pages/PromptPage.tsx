@@ -20,6 +20,8 @@ const PromptPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
 
   // Fetch prompts from Firebase (simple getDocs to avoid rules/index issues)
   useEffect(() => {
@@ -51,6 +53,10 @@ const PromptPage = () => {
           return bTime - aTime;
         });
         setPrompts(promptsData);
+        
+        // Extract unique categories dynamically
+        const uniqueCategories = Array.from(new Set(promptsData.map(p => p.category || 'General')));
+        setAvailableCategories(uniqueCategories.sort());
       } catch (error) {
         console.error("Error fetching prompts:", error);
         setPrompts([]);
@@ -64,10 +70,11 @@ const PromptPage = () => {
   // Group prompts by category
   const getCategoryGradient = (category: string) => {
     const gradients: { [key: string]: string } = {
-      'YouWare Prompts': 'from-cyan-500 to-teal-500',
-      'AI Tools Prompts': 'from-teal-500 to-emerald-500',
-      'Productivity Prompts': 'from-blue-500 to-cyan-500',
-      'General': 'from-purple-500 to-pink-500',
+      'AI Influencer': 'from-cyan-500 to-teal-500',
+      'Luxury and Lifestyle': 'from-teal-500 to-emerald-500',
+      'Thumbnail': 'from-blue-500 to-cyan-500',
+      'AD Creative': 'from-purple-500 to-pink-500',
+      'Buisness and Corporate': 'from-blue-500 to-cyan-500',
     };
     return gradients[category] || 'from-gray-500 to-gray-600';
   };
@@ -97,14 +104,29 @@ const PromptPage = () => {
     category.prompts.map(prompt => ({ ...prompt, category: category.title, gradient: category.gradient }))
   );
 
-  const filteredPrompts = searchQuery
-    ? allPrompts.filter(
+  // Apply category and search filtering
+  const getFilteredPrompts = () => {
+    let filtered = allPrompts;
+    
+    // Apply category filter
+    if (selectedCategory !== 'All') {
+      filtered = filtered.filter(prompt => prompt.category === selectedCategory);
+    }
+    
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
         (prompt) =>
           (prompt.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
           prompt.prompt.toLowerCase().includes(searchQuery.toLowerCase()) ||
           (prompt.category || '').toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+      );
+    }
+    
+    return filtered;
+  };
+
+  const filteredPrompts = getFilteredPrompts();
 
   return (
     <div className="min-h-screen pt-16 pb-20 bg-slate-950">
@@ -154,7 +176,7 @@ const PromptPage = () => {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
             <input
               type="text"
-              placeholder="Search prompts..."
+              placeholder="Search for prompts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-slate-800 bg-slate-900 text-white focus:border-cyan-500 focus:outline-none transition-colors"
@@ -167,7 +189,56 @@ const PromptPage = () => {
           )}
         </motion.div>
 
-        {/* Display Search Results or All Categories */}
+        {/* Category Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-12"
+        >
+          <div className="flex flex-wrap gap-3 justify-center">
+            {/* All Tab */}
+            <button
+              onClick={() => setSelectedCategory('All')}
+              className={`px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 hover:scale-105 ${
+                selectedCategory === 'All'
+                  ? 'bg-gradient-to-r from-gray-600 to-gray-700 text-white border-2 border-cyan-400/50 scale-105'
+                  : 'bg-gradient-to-r from-gray-600 to-gray-700 text-white hover:shadow-gray-500/50'
+              }`}
+            >
+              All
+            </button>
+            
+            {/* Dynamic Category Tabs */}
+            {availableCategories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 hover:scale-105 ${
+                  selectedCategory === category
+                    ? `bg-gradient-to-r ${getCategoryGradient(category)} text-white border-2 border-cyan-400/50 scale-105`
+                    : `bg-gradient-to-r ${getCategoryGradient(category)} text-white hover:shadow-lg`
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+          
+          {/* Active Category Indicator */}
+          <div className="mt-4 text-center">
+            <span className="text-slate-400 text-sm">
+              Showing: <span className="text-cyan-400 font-semibold">
+                {selectedCategory === 'All' ? 'All Prompts' : `${selectedCategory} Prompts`}
+              </span>
+              {filteredPrompts.length > 0 && (
+                <span className="text-slate-500 ml-2">({filteredPrompts.length} found)</span>
+              )}
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Display Search Results or Filtered Prompts */}
         {loading ? (
           <div className="text-center py-20">
             <p className="text-2xl text-slate-400">Loading prompts...</p>
@@ -177,7 +248,7 @@ const PromptPage = () => {
             <p className="text-2xl text-slate-400 mb-4">No prompts available yet.</p>
             <p className="text-slate-500">Add prompts from the admin dashboard to see them here.</p>
           </div>
-        ) : searchQuery ? (
+        ) : filteredPrompts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPrompts.map((prompt, index) => (
               <motion.div
@@ -238,97 +309,17 @@ const PromptPage = () => {
               </motion.div>
             ))}
           </div>
-        ) : promptCategories.length > 0 ? (
-          <div className="space-y-12">
-            {promptCategories.map((category, categoryIndex) => (
-              <motion.div
-                key={category.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 + categoryIndex * 0.1 }}
-              >
-                <h3 className={`text-3xl font-bold bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent mb-6`}>
-                  {category.title}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {category.prompts.map((prompt, promptIndex) => (
-                    <motion.div
-                      key={prompt.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: promptIndex * 0.1 }}
-                      className="group bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg"
-                    >
-                      {/* Image Section */}
-                      <div className="relative h-48 overflow-hidden">
-                        {prompt.image ? (
-                          <img
-                            src={prompt.image}
-                            alt={prompt.title || 'Prompt'}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-                            <Image className="text-slate-600" size={40} />
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
-                        <div className="absolute top-4 right-4 p-2 bg-slate-900/80 backdrop-blur-sm rounded-lg">
-                          <Image className="text-cyan-400" size={20} />
-                        </div>
-                      </div>
-
-                      {/* Content Section */}
-                      <div className="p-6">
-                        <h4 className="text-xl font-bold text-white mb-3">
-                          {prompt.title || 'Untitled Prompt'}
-                        </h4>
-                        <p className="text-slate-400 mb-4 line-clamp-3 text-sm leading-relaxed">
-                          {prompt.prompt}
-                        </p>
-                        <button
-                          onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
-                          className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                            copiedId === prompt.id
-                              ? 'bg-green-600 text-white'
-                              : `bg-gradient-to-r ${category.gradient} text-white hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105`
-                          }`}
-                        >
-                          {copiedId === prompt.id ? (
-                            <>
-                              <Check size={18} />
-                              Copied!
-                            </>
-                          ) : (
-                            <>
-                              <Copy size={18} />
-                              Copy Prompt
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-2xl text-slate-400">No prompts found.</p>
-          </div>
-        )}
-
-        {filteredPrompts.length === 0 && searchQuery && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-20"
-          >
             <p className="text-2xl text-slate-400">
-              No prompts found matching your search.
+              {searchQuery 
+                ? 'No prompts found matching your search.'
+                : selectedCategory === 'All' 
+                  ? 'No prompts found.'
+                  : `No prompts found in ${selectedCategory} category.`
+              }
             </p>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

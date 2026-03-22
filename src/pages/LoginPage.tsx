@@ -39,6 +39,7 @@ export default function LoginPage() {
 
         <form
           className="mt-8 space-y-4"
+          autoComplete="on"
           onSubmit={async (e) => {
             e.preventDefault();
             if (submitting) return;
@@ -59,10 +60,12 @@ export default function LoginPage() {
           }}
         >
           <div>
-            <label className="block text-sm font-medium text-slate-200">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-200">
               Email
             </label>
             <input
+              id="email"
+              name="email"
               type="email"
               autoComplete="email"
               required
@@ -74,10 +77,12 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-200">
+            <label htmlFor="password" className="block text-sm font-medium text-slate-200">
               Password
             </label>
             <input
+              id="password"
+              name="password"
               type="password"
               autoComplete="current-password"
               required

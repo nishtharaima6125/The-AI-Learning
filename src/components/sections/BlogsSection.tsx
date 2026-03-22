@@ -69,8 +69,11 @@ const BlogsSection = () => {
   }, []);
 
   return (
-    <section id="blogs" className="py-20 bg-gray-50 dark:bg-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="blogs" className="py-20 bg-gradient-to-b from-slate-950 via-cyan-950/10 to-slate-950 relative overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -78,21 +81,21 @@ const BlogsSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             Latest Blog Posts
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
+          <p className="text-xl text-slate-400 mb-8">
             In-depth articles, guides, and insights on AI and technology
           </p>
 
           {/* Search Bar */}
           <div className="max-w-xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
               <input
                 type="text"
                 placeholder="Search blog posts..."
-                className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none transition-colors"
+                className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-slate-700 bg-slate-800 text-white focus:border-cyan-500 focus:outline-none transition-colors"
                 onClick={() => navigate('/blogs')}
               />
             </div>
@@ -102,59 +105,52 @@ const BlogsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {blogs.length === 0 ? (
             <div className="col-span-2 text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">No blog posts available yet.</p>
+              <p className="text-slate-400">No blog posts available yet.</p>
             </div>
           ) : (
             blogs.map((blog, index) => (
-            <motion.div
-              key={blog.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
-              onClick={() => navigate(`/blog/${blog.id}`)}
-            >
-              {/* Image */}
-              <div className="relative overflow-hidden aspect-video">
-                {blog.image ? (
-                  <img
-                    src={blog.image}
-                    alt={blog.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-700 flex items-center justify-center text-gray-300">
-                    <span>No Image</span>
+              <motion.div
+                key={blog.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg cursor-pointer group">
+                  {/* Blog Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    {blog.image ? (
+                      <img
+                        src={blog.image}
+                        alt={blog.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+                    
+                    {/* Date Badge */}
+                    <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-sm border border-white/10 px-3 py-1 rounded-full">
+                      <p className="text-xs text-slate-200">
+                        {blog.createdAt ? new Date(blog.createdAt.toDate()).toLocaleDateString() : 'No date'}
+                      </p>
+                    </div>
                   </div>
-                )}
-                {blog.category && (
-                  <div className="absolute top-4 left-4 bg-blue-600 text-white px-4 py-1.5 rounded-full text-sm font-semibold">
-                    {blog.category}
+                  
+                  {/* Blog Content */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2">{blog.title}</h3>
+                    <p className="text-slate-400 mb-4 line-clamp-3">
+                      {blog.content}
+                    </p>
+                    <div className="flex items-center gap-2 text-cyan-400 font-semibold group-hover:gap-4 transition-all mt-auto">
+                      <span className="whitespace-nowrap">Read More</span>
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                    </div>
                   </div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="p-6 flex flex-col">
-                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm mb-3">
-                  <Calendar size={16} className="flex-shrink-0" />
-                  <span className="truncate">
-                    {blog.createdAt?.toDate?.()?.toLocaleDateString() || "Unknown date"}
-                  </span>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">
-                  {blog.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 break-words">
-                  {blog.content}
-                </p>
-                <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold group-hover:gap-4 transition-all mt-auto">
-                  <span className="whitespace-nowrap">Read More</span>
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform flex-shrink-0" />
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
             ))
           )}
         </div>
@@ -163,7 +159,7 @@ const BlogsSection = () => {
         <div className="text-center">
           <button
             onClick={() => navigate('/blogs')}
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             View All Blog Posts
           </button>

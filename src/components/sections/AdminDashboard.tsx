@@ -211,11 +211,12 @@ function AdminDashboard() {
   const pageSize = 10;
 
   // Blog form states
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState(""); // plain text fallback / excerpt
+  const [title, setTitle] = useState(""); 
+  const [content, setContent] = useState("");
   const [contentHtml, setContentHtml] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isAddingBlog, setIsAddingBlog] = useState(false);
+  const [blogs, setBlogs] = useState<any[]>([]);
 
   // Prompt form states
   const [prompts, setPrompts] = useState<any[]>([]);
@@ -239,6 +240,19 @@ function AdminDashboard() {
     fetchContacts();
   }, []);
 
+  // Fetch blogs
+  useEffect(() => {
+    async function fetchBlogs() {
+      try {
+        const snapshot = await getDocs(collection(db, "blogs"));
+        setBlogs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), ref: doc.ref })));
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    }
+    fetchBlogs();
+  }, []);
+
   // Fetch prompts
   useEffect(() => {
     async function fetchPrompts() {
@@ -251,6 +265,21 @@ function AdminDashboard() {
     }
     fetchPrompts();
   }, []);
+
+  // Delete blog
+  async function handleDeleteBlog(blogId: string, blogRef: any) {
+    const confirmed = window.confirm("Are you sure you want to delete this blog?");
+    if (!confirmed) return;
+
+    try {
+      await deleteDoc(blogRef);
+      setBlogs(prev => prev.filter(blog => blog.id !== blogId));
+      alert("Blog deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+      alert("Failed to delete blog. Please try again.");
+    }
+  }
 
   // Delete contact
   async function handleDelete(ref: any) {
@@ -304,11 +333,16 @@ function AdminDashboard() {
         image: imageUrl,
       });
 
+      // Reset form
       setTitle("");
       setContent("");
       setContentHtml("");
       setImageFile(null);
       alert("Blog added successfully!");
+
+      // Refresh blogs list
+      const blogsSnapshot = await getDocs(collection(db, "blogs"));
+      setBlogs(blogsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), ref: doc.ref })));
     } catch (error: any) {
       console.error("Error adding blog:", error);
       const msg = error?.message || String(error);
@@ -633,6 +667,52 @@ function AdminDashboard() {
           </>
         )}
 
+        {/* BLOG LIST SECTION */}
+        <h2 className="text-3xl font-bold mt-16 mb-8 text-center text-gray-100">
+          Existing Blogs
+        </h2>
+
+        {blogs.length === 0 ? (
+          <div className="bg-gray-800 p-6 rounded-lg text-center text-gray-400">
+            No blogs found. Add your first blog above!
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {blogs.map((blog) => (
+              <div key={blog.id} className="bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-cyan-500/50 transition-colors">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-white mb-2">{blog.title}</h3>
+                    <p className="text-gray-400 text-sm mb-2">
+                      Author: {blog.author || 'Unknown'} | 
+                      Created: {blog.createdAt ? new Date(blog.createdAt.toDate()).toLocaleDateString() : 'Unknown date'}
+                    </p>
+                    <p className="text-gray-300 line-clamp-3">
+                      {blog.content || blog.contentHtml?.replace(/<[^>]*>/g, '').substring(0, 200) || 'No content preview'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteBlog(blog.id, blog.ref)}
+                    className="ml-4 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-semibold"
+                    title="Delete blog"
+                  >
+                    Delete
+                  </button>
+                </div>
+                {blog.image && (
+                  <div className="mt-4">
+                    <img 
+                      src={blog.image} 
+                      alt={blog.title} 
+                      className="w-32 h-32 object-cover rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* ADD BLOG SECTION */}
         <h2 className="text-3xl font-bold mt-16 mb-8 text-center text-gray-100">
           Add New Blog
@@ -700,13 +780,18 @@ function AdminDashboard() {
               onChange={(e) => setPromptCategory(e.target.value)}
               className="w-full p-3 rounded bg-gray-700 text-white"
             >
-              <option value="General">General</option>
-              <option value="YouWare Prompts">YouWare Prompts</option>
-              <option value="AI Tools Prompts">AI Tools Prompts</option>
-              <option value="Productivity Prompts">Productivity Prompts</option>
+              <option value="Luxury and Lifestyle">Luxury and Lifestyle</option>
+              <option value="AI Influencer">AI Influencer</option>
+              <option value="Thumbnail">Thumbnail</option>
+              <option value="AD Creative">AD Creative</option>
+              <option value="Buisness and Corporate">Buisness and Corporate</option>
             </select>
           </div>
-
+          {/* 'AI Influencer': 'from-cyan-500 to-teal-500',
+      'Luxury and Lifestyle': 'from-teal-500 to-emerald-500',
+      'Thumbnail': 'from-blue-500 to-cyan-500',
+      'AD Creative': 'from-purple-500 to-pink-500',
+      'Buisness and Corporate': 'from-blue-500 to-cyan-500', */}
           <div>
             <label className="block text-gray-200 mb-2">Prompt Text</label>
             <textarea

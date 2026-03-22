@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updated Prompts Page UI Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #0f172a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(6,182,212,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6,182,212,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .category-tab {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .category-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        .category-tab:hover::before {
+            left: 100%;
+        }
+        .prompt-card {
+            transition: all 0.3s ease;
+        }
+        .prompt-card:hover {
+            transform: translateY(-4px);
+        }
+        .gradient-cyan-teal {
+            background: linear-gradient(135deg, #06b6d4, #14b8a6);
+        }
+        .gradient-teal-emerald {
+            background: linear-gradient(135deg, #14b8a6, #10b981);
+        }
+        .gradient-blue-cyan {
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+        }
+        .gradient-purple-pink {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-950">
+    <div class="grid-bg absolute inset-0"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Header Section -->
+        <div class="mb-12">
+            <button class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 mb-6 transition-colors">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back to Home
+            </button>
+            <h1 class="text-6xl font-black mb-4">
+                <span class="text-white">Prompt </span>
+                <span class="bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">Library</span>
+            </h1>
+            <p class="text-xl text-slate-400">
+                Discover and copy ready-to-use AI prompts for productivity and development
+            </p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <div class="relative max-w-2xl mx-auto">
+                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" placeholder="Search prompts..." class="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-slate-800 bg-slate-900 text-white focus:border-cyan-500 focus:outline-none transition-colors">
+            </div>
+        </div>
+
+        <!-- NEW: Category Tabs Section -->
+        <div class="mb-12">
+            <div class="flex flex-wrap gap-3 justify-center">
+                <!-- AI Influencer Tab (Active) -->
+                <button class="category-tab px-6 py-3 rounded-full gradient-cyan-teal text-white font-semibold shadow-lg border-2 border-cyan-400/50 scale-105">
+                    AI Influencer
+                </button>
+                
+                <!-- All Tab -->
+                <button class="category-tab px-6 py-3 rounded-full bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold shadow-lg hover:shadow-gray-500/50 hover:scale-105">
+                    All
+                </button>
+                
+                <!-- Luxury and Lifestyle Tab -->
+                <button class="category-tab px-6 py-3 rounded-full gradient-teal-emerald text-white font-semibold shadow-lg hover:shadow-teal-500/50 hover:scale-105">
+                    Luxury and Lifestyle
+                </button>
+                
+                <!-- Thumbnail Tab -->
+                <button class="category-tab px-6 py-3 rounded-full gradient-blue-cyan text-white font-semibold shadow-lg hover:shadow-blue-500/50 hover:scale-105">
+                    Thumbnail
+                </button>
+                
+                <!-- AD Creative Tab -->
+                <button class="category-tab px-6 py-3 rounded-full gradient-purple-pink text-white font-semibold shadow-lg hover:shadow-purple-500/50 hover:scale-105">
+                    AD Creative
+                </button>
+                
+                <!-- Business and Corporate Tab -->
+                <button class="category-tab px-6 py-3 rounded-full gradient-blue-cyan text-white font-semibold shadow-lg hover:shadow-blue-500/50 hover:scale-105">
+                    Business and Corporate
+                </button>
+            </div>
+            
+            <!-- Active Category Indicator -->
+            <div class="mt-4 text-center">
+                <span class="text-slate-400 text-sm">Showing: <span class="text-cyan-400 font-semibold">AI Influencer Prompts</span></span>
+            </div>
+        </div>
+
+        <!-- AI Influencer Prompts Grid (Filtered) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- AI Influencer Prompt Card 1 -->
+            <div class="prompt-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 shadow-lg">
+                <div class="relative h-48 overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                        <svg class="text-slate-600" width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                    <div class="absolute top-4 left-4 text-xs font-semibold gradient-cyan-teal px-3 py-1.5 rounded-full text-white shadow-lg">
+                        AI Influencer
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <h4 class="text-xl font-bold text-white mb-3">AI Content Generation</h4>
+                    <p class="text-slate-400 mb-4 text-sm leading-relaxed">Generate engaging AI content for social media platforms with specific tone and style guidelines...</p>
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 gradient-cyan-teal text-white hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        Copy Prompt
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Influencer Prompt Card 2 -->
+            <div class="prompt-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 shadow-lg">
+                <div class="relative h-48 overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                        <svg class="text-slate-600" width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                    <div class="absolute top-4 left-4 text-xs font-semibold gradient-cyan-teal px-3 py-1.5 rounded-full text-white shadow-lg">
+                        AI Influencer
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <h4 class="text-xl font-bold text-white mb-3">AI Persona Development</h4>
+                    <p class="text-slate-400 mb-4 text-sm leading-relaxed">Create detailed AI influencer personas with unique personalities, backgrounds, and content strategies...</p>
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 gradient-cyan-teal text-white hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        Copy Prompt
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Influencer Prompt Card 3 -->
+            <div class="prompt-card bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-cyan-500/50 shadow-lg">
+                <div class="relative h-48 overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                        <svg class="text-slate-600" width="40" height="40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                    <div class="absolute top-4 left-4 text-xs font-semibold gradient-cyan-teal px-3 py-1.5 rounded-full text-white shadow-lg">
+                        AI Influencer
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <h4 class="text-xl font-bold text-white mb-3">AI Trend Analysis</h4>
+                    <p class="text-slate-400 mb-4 text-sm leading-relaxed">Analyze trending topics and create AI-powered content strategies for maximum engagement...</p>
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 gradient-cyan-teal text-white hover:shadow-lg hover:shadow-cyan-500/50 hover:scale-105">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        Copy Prompt
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- UI Annotations -->
+        <div class="mt-16 p-6 bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700">
+            <h3 class="text-2xl font-bold text-white mb-4">🎯 AI Influencer Filter View</h3>
+            <div class="space-y-3 text-slate-300">
+                <div class="flex items-start gap-3">
+                    <span class="text-cyan-400 font-semibold">1.</span>
+                    <div>
+                        <strong class="text-white">Active Category Tab:</strong> "AI Influencer" tab selected with cyan gradient and border highlight
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-cyan-400 font-semibold">2.</span>
+                    <div>
+                        <strong class="text-white">Filtered Results:</strong> Only AI Influencer prompts displayed (3 prompts shown)
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-cyan-400 font-semibold">3.</span>
+                    <div>
+                        <strong class="text-white">Status Indicator:</strong> Shows "AI Influencer Prompts" to clarify current filter
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-cyan-400 font-semibold">4.</span>
+                    <div>
+                        <strong class="text-white">Consistent Styling:</strong> All filtered prompts use matching AI Influencer gradient
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-cyan-400 font-semibold">5.</span>
+                    <div>
+                        <strong class="text-white">Quick Navigation:</strong> Users can click "All" or other categories to change filter
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
