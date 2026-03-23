@@ -3,7 +3,7 @@ services:
   - type: web
     name: youware-frontend
     env: static
-    buildCommand: npm run render-build
+    buildCommand: npm install && npm run build
     publishPath: dist
     routes:
       # Serve static assets normally
@@ -24,3 +24,6 @@ services:
         value: "false"
       - key: NPM_CONFIG_FUND
         value: "false"
+      # Explicitly disable pnpm
+      - key: NPM_CONFIG_LEGACY_PEER_DEPS
+        value: "true"
