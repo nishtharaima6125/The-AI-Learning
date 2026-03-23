@@ -4,6 +4,10 @@
   "routes": {
     "/assets/*": "/assets/:splat",
     "/favicon.ico": "/favicon.ico",
+    "/prompt": "/index.html",
+    "/login": "/index.html",
+    "/admin": "/index.html",
+    "/blogs": "/index.html",
     "/*.js": "/:splat",
     "/*.css": "/:splat",
     "/*.png": "/:splat",

@@ -11,8 +11,20 @@ services:
         path: /assets/:splat
       - route: /favicon.ico
         path: /favicon.ico
-      # Handle client-side routing - redirect all other routes to index.html
-      - route: /**/*
+      # Handle specific client-side routes
+      - route: /prompt
+        path: /index.html
+      - route: /login
+        path: /index.html
+      - route: /admin
+        path: /index.html
+      - route: /blogs
+        path: /index.html
+      # Handle all other routes (SPA fallback)
+      - route: /:path*
+        path: /index.html
+      # Handle root route
+      - route: /
         path: /index.html
     envVars:
       # Force npm usage and prevent pnpm
