@@ -1,0 +1,20 @@
+services:
+  # Static site for the React/Vite frontend
+  - type: web
+    name: youware-frontend
+    env: static
+    buildCommand: npm run build
+    publishPath: dist
+    routes:
+      # Serve static assets normally
+      - route: /assets/*
+        path: /assets/:splat
+      - route: /favicon.ico
+        path: /favicon.ico
+      # Handle client-side routing - redirect all other routes to index.html
+      - route: /**/*
+        path: /index.html
+    envVars:
+      # Optional: Add any environment variables needed for frontend
+      - key: NODE_ENV
+        value: production

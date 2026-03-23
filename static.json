@@ -1,0 +1,8 @@
+{
+  "root": "dist/",
+  "routes": {
+    "/assets/*": "/assets/:splat",
+    "/favicon.ico": "/favicon.ico",
+    "/**": "/index.html"
+  }
+}
