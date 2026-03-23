@@ -1,8 +1,21 @@
 {
   "root": "dist/",
+  "clean_urls": true,
   "routes": {
     "/assets/*": "/assets/:splat",
     "/favicon.ico": "/favicon.ico",
+    "/*.js": "/:splat",
+    "/*.css": "/:splat",
+    "/*.png": "/:splat",
+    "/*.jpg": "/:splat",
+    "/*.jpeg": "/:splat",
+    "/*.gif": "/:splat",
+    "/*.svg": "/:splat",
+    "/*.ico": "/:splat",
+    "/*.woff": "/:splat",
+    "/*.woff2": "/:splat",
+    "/*.ttf": "/:splat",
+    "/*.eot": "/:splat",
     "/**": "/index.html"
   }
 }

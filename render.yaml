@@ -3,7 +3,7 @@ services:
   - type: web
     name: youware-frontend
     env: static
-    buildCommand: npm run build
+    buildCommand: ./render-build.sh
     publishPath: dist
     routes:
       # Serve static assets normally
@@ -15,6 +15,12 @@ services:
       - route: /**/*
         path: /index.html
     envVars:
-      # Optional: Add any environment variables needed for frontend
+      # Force npm usage and prevent pnpm
       - key: NODE_ENV
         value: production
+      - key: NPM_CONFIG_PREFER_OFFLINE
+        value: "true"
+      - key: NPM_CONFIG_AUDIT
+        value: "false"
+      - key: NPM_CONFIG_FUND
+        value: "false"
