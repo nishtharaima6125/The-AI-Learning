@@ -3,7 +3,7 @@ services:
   - type: web
     name: youware-frontend
     env: static
-    buildCommand: ./render-build.sh
+    buildCommand: npm run render-build
     publishPath: dist
     routes:
       # Serve static assets normally
