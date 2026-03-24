@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: The-AI-Learning-1
-    env: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
