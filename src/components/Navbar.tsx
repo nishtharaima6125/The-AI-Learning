@@ -55,7 +55,6 @@ const Navbar = () => {
     { name: 'Prompts', path: '/prompts' },
     { name: 'About', id: 'about' },
     { name: 'Contact', id: 'contact' },
-    { name: 'Admin', path: '/admin' },
 
   ];
 
