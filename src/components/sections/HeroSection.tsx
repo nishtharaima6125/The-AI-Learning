@@ -88,15 +88,6 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl text-cyan-400 font-medium mb-6"
             >
-              {* The AI Learning – AI Tools, AI Influencer, Prompt, Automation The AI Learning – AI Tools, AI Influencer, Prompt, Automation & Tutorials Tutorials *}
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl text-slate-300 mb-8 leading-relaxed"
-            >
              Your AI Skill Partner — Learn cutting-edge AI tools, automation workflows, and AI content creation. Build AI influencers, generate videos, and grow your brand with modern AI technologies
             </motion.p>
 
