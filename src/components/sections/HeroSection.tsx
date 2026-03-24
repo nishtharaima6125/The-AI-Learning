@@ -78,7 +78,7 @@ const HeroSection = () => {
               <span className="text-white">The AI</span>
               <br />
               <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent">
-                Learning Hub
+                Learning 
               </span>
             </motion.h1>
 
@@ -88,7 +88,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-xl text-slate-300 mb-8 leading-relaxed"
             >
-              Your AI Skill Partner - Master cutting-edge AI tools, automation workflows, and modern tech through hands-on tutorials and expert guidance.
+             Your AI Skill Partner — Learn cutting-edge AI tools, automation workflows, and AI content creation. Build AI influencers, generate videos, and grow your brand with modern AI technologies
             </motion.p>
 
             <motion.div
@@ -128,11 +128,11 @@ const HeroSection = () => {
                 <div className="text-sm text-slate-400 mt-1">Subscribers</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-3xl font-black text-teal-400">200+</div>
+                <div className="text-3xl font-black text-teal-400">60+</div>
                 <div className="text-sm text-slate-400 mt-1">Tutorials</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-3xl font-black text-emerald-400">1M+</div>
+                <div className="text-3xl font-black text-emerald-400">3M+</div>
                 <div className="text-sm text-slate-400 mt-1">Views</div>
               </div>
             </motion.div>
