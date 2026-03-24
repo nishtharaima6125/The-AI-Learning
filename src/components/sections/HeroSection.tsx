@@ -124,7 +124,7 @@ const HeroSection = () => {
               className="grid grid-cols-3 gap-6"
             >
               <div className="text-center lg:text-left">
-                <div className="text-3xl font-black text-cyan-400">50K+</div>
+                <div className="text-3xl font-black text-cyan-400">60K+</div>
                 <div className="text-sm text-slate-400 mt-1">Subscribers</div>
               </div>
               <div className="text-center lg:text-left">
