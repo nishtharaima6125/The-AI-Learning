@@ -23,7 +23,7 @@ const HeroSection = () => {
       
       {/* Animated Orbs */}
       <div className="absolute inset-0 overflow-hidden">
-        <motion.div
+        <motion.p
           animate={{
             scale: [1, 1.3, 1],
             opacity: [0.3, 0.6, 0.3],
@@ -35,7 +35,7 @@ const HeroSection = () => {
           }}
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/30 rounded-full blur-[100px]"
         />
-        <motion.div
+        <motion.p
           animate={{
             scale: [1.3, 1, 1.3],
             opacity: [0.4, 0.7, 0.4],
@@ -52,14 +52,14 @@ const HeroSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
-          <motion.div
+          <motion.p
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             className="text-left"
           >
             {/* Badge */}
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -67,7 +67,7 @@ const HeroSection = () => {
             >
               <Zap className="text-cyan-400" size={18} />
               <span className="text-cyan-100 font-medium text-sm">Transform Your AI Skills</span>
-            </motion.div>
+            </motion.p>
 
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -75,14 +75,14 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight"
             >
-              <span className="text-white">The AI</span>
+              <span className="text-white dark:text-white">The AI</span>
               <br />
               <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent">
                 Learning 
               </span>
             </motion.h1>
 
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -91,7 +91,7 @@ const HeroSection = () => {
              Your AI Skill Partner — Learn cutting-edge AI tools, automation workflows, and AI content creation. Build AI influencers, generate videos, and grow your brand with modern AI technologies
             </motion.p>
 
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
@@ -114,10 +114,10 @@ const HeroSection = () => {
                 <Mail size={24} />
                 Contact Us
               </button>
-            </motion.div>
+            </motion.p>
 
             {/* Stats */}
-            <motion.div
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
@@ -135,11 +135,11 @@ const HeroSection = () => {
                 <div className="text-3xl font-black text-emerald-400">3M+</div>
                 <div className="text-sm text-slate-400 mt-1">Views</div>
               </div>
-            </motion.div>
-          </motion.div>
+            </motion.p>
+          </motion.p>
 
           {/* Right Visual Element */}
-          <motion.div
+          <motion.p
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -170,7 +170,7 @@ const HeroSection = () => {
                           <span className="text-cyan-400 font-bold">{skill.progress}%</span>
                         </div>
                         <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                          <motion.div
+                          <motion.p
                             initial={{ width: 0 }}
                             animate={{ width: `${skill.progress}%` }}
                             transition={{ duration: 1.5, delay: 0.5 + i * 0.2 }}
@@ -184,21 +184,21 @@ const HeroSection = () => {
               </div>
 
               {/* Floating Elements */}
-              <motion.div
+              <motion.p
                 animate={{ y: [-10, 10, -10] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-cyan-400 to-teal-400 rounded-2xl shadow-2xl shadow-cyan-500/50 flex items-center justify-center"
               >
                 <Zap className="text-white" size={40} />
-              </motion.div>
+              </motion.p>
 
-              <motion.div
+              <motion.p
                 animate={{ y: [10, -10, 10] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-br from-teal-400 to-emerald-400 rounded-2xl shadow-2xl shadow-teal-500/50"
               />
             </div>
-          </motion.div>
+          </motion.p>
         </div>
 
         {/* Scroll Indicator */}
@@ -210,12 +210,12 @@ const HeroSection = () => {
         >
           <div className="flex flex-col items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors">
             <span className="text-sm font-medium">Explore Content</span>
-            <motion.div
+            <motion.p
               animate={{ y: [0, 5, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
               <ArrowRight className="rotate-90" size={24} />
-            </motion.div>
+            </motion.p>
           </div>
         </motion.button>
       </div>
