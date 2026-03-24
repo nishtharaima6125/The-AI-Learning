@@ -82,6 +82,15 @@ const HeroSection = () => {
               </span>
             </motion.h1>
 
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl text-cyan-400 font-medium mb-6"
+            >
+              The AI Learning – AI Tools, AI Influencer, Prompt, Automation & Tutorials
+            </motion.div>
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
