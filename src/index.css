@@ -16,6 +16,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .force-white-text {
+    color: white !important;
+  }
 }
 
 /* --- Quill (blog editor + rendering) font/size mappings --- */
